@@ -1,0 +1,28 @@
+body{
+    margin: 50px;
+    margin-top: 10%;
+}
+
+#camera{
+    position: absolute;
+    right: 100px;
+    width: 520px;
+    height: 395px;
+    border: 10px solid black;
+}
+
+#output{
+
+    position: absolute;
+    left: 100px;
+    width: 500px;
+    height: 375px;
+    border: 10px solid black;
+}
+
+#videoElement{
+    width:500px;
+    height: 375px;
+    background-color: #666;
+}
+

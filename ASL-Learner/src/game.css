@@ -1,0 +1,40 @@
+.gamepage{
+    display:flex;
+}
+.leftSide{
+    width: 50vw;
+    height: 100vh;
+    display: flex;
+
+}
+.leftSideContent{
+    
+    width: fit-content;
+    margin: auto auto;
+    /* border: 1px solid black; */
+}
+
+
+.choosenWord{
+    display:flex;
+    margin:0 auto;
+    width: fit-content;
+    /* border: 1px solid black; */
+
+}
+
+.letter{
+    margin: 5px;
+    font-size: 36px;
+    opacity: 0.5;
+}
+
+.choosenLetter{
+    opacity: 1;
+}
+
+.webcam{
+    width: 50vw;
+    height: 100vh;
+    object-fit: cover;
+}
