@@ -20,8 +20,8 @@ function Choosehand() {
                         <h1> <bold> Are you left or right handed? </bold> </h1>
                         <h6> Choose the hand you want to use </h6>
                         <ButtonGroup vertical>
-                            <Button onClick={navigateWebcam}> Right </Button>
-                            <Button onClick={navigateWebcam}> Left </Button>
+                            <Button onClick={navigateWebcam}> Right Hand</Button>
+                            <Button onClick={navigateWebcam}> Left Hand </Button>
                             
                         </ButtonGroup>   
                     </Form>
