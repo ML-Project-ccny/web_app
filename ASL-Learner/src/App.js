@@ -9,6 +9,9 @@ import Choosehand from './choosehand';
 import Webcams from './webcams';
 import ChooseLevel from './chooseLevel'
 import Game from './game'
+import Login from './Login';
+import Register from './Register';
+
 function App() {
   return (
     <div className="App">
@@ -26,6 +29,8 @@ function App() {
         <Route path="/project" element={<Project />} />
         <Route path="/level" element={<ChooseLevel />} />
         <Route path="/game" element={<Game />} />
+        <Route path="/Login" element={<Login />} />
+        <Route path="/Register" element={<Register />} />
 
 
       </Routes>
