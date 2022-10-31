@@ -37,7 +37,7 @@ function ChooseLevel(){
             console.log(res.data[num])
             arrWords.push(res.data[num])
         } )
-        setWords(arrWords)
+        // setWords(arrWords)
         // res.data.forEach((i,arr) => {
         //     console.log(res.data[i])
         // })
