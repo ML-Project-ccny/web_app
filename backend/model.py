@@ -1,42 +1,56 @@
 import torch.nn.functional as F
 import torch.nn as nn
 import torch
-import torchvision.transforms as transforms
-class SimpleConvNetModel(nn.Module):
+import torchvision.models as models
+
+def accuracy(outputs, labels):
+    _, preds = torch.max(outputs, dim=1)
+    return torch.tensor(torch.sum(preds == labels).item() / len(preds))
+
+class ImageClassificationBase(nn.Module):
+    def training_step(self, batch):
+        images, labels = batch 
+        out = self(images)                  # Generate predictions
+        loss = F.cross_entropy(out, labels) # Calculate loss
+        return loss
+
+    def validation_step(self, batch):
+        images, labels = batch 
+        out = self(images)                    # Generate predictions
+        loss = F.cross_entropy(out, labels)   # Calculate loss
+        acc = accuracy(out, labels)           # Calculate accuracy
+        return {'val_loss': loss.detach(), 'val_acc': acc}
+
+    def validation_epoch_end(self, outputs):
+        batch_losses = [x['val_loss'] for x in outputs]
+        epoch_loss = torch.stack(batch_losses).mean()   # Combine losses
+        batch_accs = [x['val_acc'] for x in outputs]
+        epoch_acc = torch.stack(batch_accs).mean()      # Combine accuracies
+        return {'val_loss': epoch_loss.item(), 'val_acc': epoch_acc.item()}
+
+    def epoch_end(self, epoch, result):
+        print("Epoch [{}], val_loss: {:.4f}, val_acc: {:.4f}".format(epoch, result['val_loss'], result['val_acc']))
+
+class ASLResnet(ImageClassificationBase):
     def __init__(self):
         super().__init__()
-        nn.Flatten
-        self.conv1 = nn.Conv2d(1, 10, kernel_size = 5, stride = 1)
-        self.conv2 = nn.Conv2d(10, 20, kernel_size = 5, stride = 1)
-        # self.dense_layer = nn.Linear(320, 50)
-        self.dense_layer = nn.Linear(9680, 2000)
-        self.output_layer = nn.Linear(2000, 26)
+        # Use a pretrained model
+        self.network = models.resnet34(pretrained=True)
+        # Replace last layer
+        num_ftrs = self.network.fc.in_features
+        self.network.fc = nn.Linear(num_ftrs, 26)
 
-    def forward(self, x):
-        x = x.reshape(4,500,500)
-        # x = x[:3,:,:]
-        t = transforms.ToPILImage()
-        img = t(x)
-        transform = transforms.Compose([
-            transforms.Grayscale(num_output_channels=1),
-            transforms.Resize((500,500)),
-            transforms.ToTensor()])
-        x = transform(img)
-        x = torch.nn.functional.avg_pool2d(x,5)
-        x = x.reshape(1,1,100,100)
+    def forward(self, xb):
+        return self.network(xb)
 
-        z1 = self.conv1(x)
-        z1_pooled = F.max_pool2d(z1, 2)
-        a1 = F.relu(z1_pooled)
-        z2 = self.conv2(a1)        
-        z2_pooled = F.max_pool2d(z2, 2)        
-        a2 = F.relu(z2_pooled) 
-        # print(a2.size())     
-        # a2 = a2.view(-1, 320) 
-        a2 = a2.view(a2.size(0), -1) 
-        # print(a2.size())         
-        z3_hidden = self.dense_layer(a2)
-        a3 = F.relu(z3_hidden)
-        a3_dropout = F.dropout(a3, training=self.training)
-        output = self.output_layer(a3_dropout)
-        return F.log_softmax(output, dim = 1)
+    def freeze(self):
+        # To freeze the residual layers
+        for param in self.network.parameters():
+            param.require_grad = False
+        for param in self.network.fc.parameters():
+            param.require_grad = True
+
+    def unfreeze(self):
+        # Unfreeze all layers
+        for param in self.network.parameters():
+            param.require_grad = True
