@@ -39,16 +39,9 @@ the sign languages are similar, they have some differences</p>
             <div className='purpose'>
                 <img className='img2' src={img2}></img>
                 <div className='desc'>
-                        <h1 className='descTitle'>Why ASL Learner</h1>
-                        <p className='descSumm'> &emsp; American Sign Language (ASL) is a complete, natural language. It has the same
-    linguistic properties as spoken languages, with grammar that differs from English. By using the
-    hand and face, it is being expressed. ASL is mostly used for North American people who are
-    deaf and hard of hearing. Many other countries have their sign languages. Even though most of
-    the sign languages are similar, they have some differences. American Sign Language (ASL) is a complete, natural language. It has the same
-    linguistic properties as spoken languages, with grammar that differs from English. By using the
-    hand and face, it is being expressed. ASL is mostly used for North American people who are
-    deaf and hard of hearing. Many other countries have their sign languages. Even though most of
-    the sign languages are similar, they have some differences</p>
+                        <h1 className='descTitle'>What is ASL Learner</h1>
+                        <p className='descSumm'> &emsp; We are building an ASL Learner project that that will spell out each letters into a ASL sign to create a fingerspelling. In this project, we are using the machine learning to guide our users to learn ASL by using hand gestures. The user will use the webcam to perform a hand gesture based on the designated ASL sign showed on the display. They will learn how each English letter is transferred into a ASL sign. They can also use it as a translator where they perform ASL sign that is converted into letter which is converted into sentence
+                        </p>
                     </div>
                 
             </div>
