@@ -1,11 +1,19 @@
 import React from 'react';
 import { useRef, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 //import AuthContext from "./context/AuthProvider";
 
 //import axios from './api/axios';
 //const LOGIN_URL = '/auth';
 
 const Login = () => {
+
+    const navigate = useNavigate();
+
+    const navigategame = () =>{
+        navigate('/game');
+    }
+
     //const { setAuth } = useContext(AuthContext);
     const userRef = useRef();
     const errRef = useRef();
@@ -68,7 +76,7 @@ const Login = () => {
                     <h1>You are logged in!</h1>
                     <br />
                     <p>
-                        <a href='/Register'>Go to Home</a>
+                        <a href='/game'>Go to Game Page</a>
                     </p>
                 </section>
             ) : (

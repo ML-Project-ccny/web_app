@@ -99,6 +99,11 @@ body,html{
     text-align: center;
     font-size:48px;
 }
+.descTitle1{
+    text-align: center;
+    font-size:48px;
+    color: rgba(50, 151, 211);
+}
 .descSumm{
     font-size:24px;
 }
