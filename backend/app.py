@@ -1,9 +1,12 @@
 from flask import Flask, request
-from model import SimpleConvNetModel
+from model import ASLResnet,ImageClassificationBase
 import torch 
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import or_,and_
+import torchvision.transforms as tt
+
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 db = SQLAlchemy(app)
@@ -27,11 +30,18 @@ class Words(db.Model):
     score = db.Column(db.Integer,default=0)
     
 # Load the model
-pytorch_model = SimpleConvNetModel()
+pytorch_model = ASLResnet()
 
 ## set params from the saved state of model
-pytorch_model.load_state_dict(torch.load('model.pt'), strict=False)
+pytorch_model.load_state_dict(torch.load('model.pt', map_location=torch.device('cpu')), strict=False)
+# pytorch_model.load_state_dict(torch.load('model.pt'), strict=False)
+
 pytorch_model.eval()
+
+#template {level:[words...],...}
+APP_WORDS = {1:['Able','Love','Buy','Cube','Wavy','Bowl','Claw','You','Clay','Clue'],
+2:['Risk','Sir','Kids','Verb','Dark','Feud',"Four",'Cake'],
+3:['Foxy','Onyx','Gown','Honk','Minx','Hack','Claw','Hawk','Hack','Numb']}
 
 @app.route('/',methods=['POST'])
 def index():
@@ -39,9 +49,21 @@ def index():
     data = request.get_json(force=True)
 
     arr = torch.FloatTensor(data['data'])
+    height,width = data['height'], data['width']
 
-    res = pytorch_model(arr)
+    x = arr.reshape(4,height,width)
+    x = x[:3,:,:] 
+    # x = torch.div(x,255)
+    t = tt.ToPILImage()
+    img = t(x)
+    tfms = tt.Compose([tt.Resize((200, 200)),
+                        tt.ToTensor()])
+    x = tfms(img)
+    x = x.reshape(1,3,200,200)
+
+    res = pytorch_model(x)
     print(res)
+    print(torch.max(res,dim=1))
     return "HELLO"
 
 @app.route('/user',methods=['POST','GET'])
@@ -98,11 +120,11 @@ def words():
         old_word.score = score
         db.session.commit()
         return 'score updated'
+@app.route('/allWords',methods=['GET'])
+def getAllWords():
+    return APP_WORDS
 
-#template {level:[words...],...}
-APP_WORDS = {1:['Able','Love','Buy','Cube','Wavy','Bowl','Claw','You','Clay','Clue'],
-2:['Risk','Sir','Kids','Verb','Dark','Feud',"Four",'Cake'],
-3:['Foxy','Onyx','Gown','Honk','Minx','Hack','Claw','Hawk','Hack','Numb']}
+
 def createWords(id):
     word = Words(user_id=id,level=1,word='word')
     try:

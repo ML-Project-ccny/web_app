@@ -4,16 +4,13 @@ import './chooseLevel.css'
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import {useNavigate} from 'react-router-dom';
+import axios from 'axios';
+
 function ChooseLevel(){
 
     const [level,setLevel] = useState(['Level 1','Level 2','Level 3','Level 4'])
     // const [count,setCount] = useState([8,6,7,6])
-    const [words,setWords] = useState([
-        ['word','word','word'],
-        ['word','word','word','word'],
-        [],
-        []
-    ])
+    const [words,setWords] = useState()
     const [score,setScore] = useState([
         [],
         [],
@@ -22,6 +19,30 @@ function ChooseLevel(){
     ])
     const navigate = useNavigate();
     
+    useEffect( async () => {
+        const res = await axios({
+            method: 'get',
+            url: 'http://localhost:5000/allWords',
+            headers: {
+                'Content-Type': 'text/plain;charset=utf-8',
+            },
+        })
+        // if user is signed in 
+        //pass
+
+        //else
+        console.log(res.data)
+        let arrWords = []
+        Object.keys(res.data).forEach( (num) =>{
+            console.log(res.data[num])
+            arrWords.push(res.data[num])
+        } )
+        // setWords(arrWords)
+        // res.data.forEach((i,arr) => {
+        //     console.log(res.data[i])
+        // })
+    },[])
+
     function changeDisplay(i,j){
         const content = document.getElementById(i)
         const title = document.getElementById(j)
