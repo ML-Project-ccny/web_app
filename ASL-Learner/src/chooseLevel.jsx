@@ -56,7 +56,7 @@ function ChooseLevel(){
     } 
     function changeHand(x){
         const content = document.getElementById('dropdown-basic-button')
-        if (x == 0){
+        if (x === 0){
             content.innerHTML = 'Right'
         }else{
             content.innerHTML = 'Left'

@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useTransition } from 'react';
 import { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 //import AuthContext from "./context/AuthProvider";
 
-//import axios from './api/axios';
+import axios from 'axios';
 //const LOGIN_URL = '/auth';
 
 const Login = () => {
@@ -22,6 +22,24 @@ const Login = () => {
     const [pwd, setPwd] = useState('');
     const [errMsg, setErrMsg] = useState('');
     const [success, setSuccess] = useState(false);
+
+    async function login (userName, passWord){
+        await axios({
+            method: 'get',
+            url: 'http://localhost:5000/user',
+            data: {userName, passWord},
+            headers: {
+                'Content-Type': 'text/plain;charset=utf-8',
+            },
+        }).then((res) => {
+            if (res == "Login in"){
+                return navigategame;
+                
+            }
+            setSuccess(true);
+
+        })
+    }
 
     useEffect(() => {
         userRef.current.focus();
@@ -103,7 +121,7 @@ const Login = () => {
                             value={pwd}
                             required
                         />
-                        <button>Sign In</button>
+                        <button onClick={login}>Sign In</button>
                     </form>
                     <p>
                         Need an Account?<br />

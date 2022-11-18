@@ -5,6 +5,9 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import or_,and_
 import torchvision.transforms as tt
+from os.path import exists
+import numpy as np
+from PIL import Image
 
 
 app = Flask(__name__)
@@ -47,23 +50,26 @@ APP_WORDS = {1:['Able','Love','Buy','Cube','Wavy','Bowl','Claw','You','Clay','Cl
 def index():
     # Get the data from the POST request.
     data = request.get_json(force=True)
-
-    arr = torch.FloatTensor(data['data'])
     height,width = data['height'], data['width']
 
-    x = arr.reshape(4,height,width)
-    x = x[:3,:,:] 
-    # x = torch.div(x,255)
-    t = tt.ToPILImage()
-    img = t(x)
+    array = np.array(data['data'], np.uint8)
+    array = np.reshape(array, (height, width, 4))
+
+    new_image = Image.fromarray(array)
     tfms = tt.Compose([tt.Resize((200, 200)),
                         tt.ToTensor()])
-    x = tfms(img)
-    x = x.reshape(1,3,200,200)
+    
+    img_transform = tfms(new_image)
+    img_transform.unsqueeze_(0)
+    img_transform = img_transform[:, :3, :, :]
 
-    res = pytorch_model(x)
+    res = pytorch_model(img_transform)
+    print('\n')
     print(res)
-    print(torch.max(res,dim=1))
+    print('\n')
+    print("max value in array                 ", torch.max(res).tolist())
+    print("index of max value (prediction)    ", torch.argmax(res).tolist())
+    print('\n')
     return "HELLO"
 
 @app.route('/user',methods=['POST','GET'])

@@ -89,7 +89,7 @@ function Game(){
                 'Content-Type': 'text/plain;charset=utf-8',
             },
         })
-        if (res.prediction == 'C'){
+        if (res.prediction === 'C'){
             changeLetter()
         }
         console.log(res.data)
@@ -98,7 +98,7 @@ function Game(){
         <div className='gamepage'>
             <div className='leftSide'>
                 <div className='leftSideContent'>
-                    <img id='img' ref={imgRef}></img>
+                    <img id='img' alt="imgRef" ref={imgRef}></img>
                     <div className='choosenWord'>
                         <div id='0' className={`letter ${count === 0 && 'choosenLetter'}`}>C</div>
                         <div id='1' className={`letter ${count === 1 && 'choosenLetter'}`}>L</div>
