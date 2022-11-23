@@ -1,5 +1,6 @@
 import React, { useEffect,useState } from "react";
 import Webcam from 'webcam-easy';
+import Register from "./Register";
 import './game.css'
 import axios from 'axios';
 // import img from './asl_letters/Sign_language_A.svg';
@@ -7,6 +8,7 @@ import axios from 'axios';
 function Game(){
     const imgRef = React.useRef();
     const [count,setCount] = useState(0)
+    const scores = 0
 
     useEffect( () => {
         const webcamElement = document.getElementById('webcam');
@@ -18,6 +20,9 @@ function Game(){
         const y = dim.y
         const WIDTH = dim.width
         const HEIGHT = dim.height
+        const email = document.getElementById('email')
+        const password = document.getElementById('password')
+
         console.log(x)
         console.log(y)
 
@@ -35,6 +40,7 @@ function Game(){
                 let imgData = ctx.getImageData(0,0,WIDTH,HEIGHT).data
                 console.log(imgData,WIDTH,HEIGHT)
                 runModel(Array.prototype.slice.call(imgData),Math.floor(HEIGHT),Math.floor(WIDTH))
+                
             },2000)
         })
         if (imgRef.current){
@@ -91,9 +97,12 @@ function Game(){
         })
         if (res.prediction === 'C'){
             changeLetter()
+            scores += 1
         }
         console.log(res.data)
     }
+
+    
     return (
         <div className='gamepage'>
             <div className='leftSide'>
@@ -118,6 +127,9 @@ function Game(){
             <div>
                 <video id="webcam" className='webcam'></video>
                 <canvas id="canvas" className="d-none"></canvas>
+            </div>
+            <div className="point">
+                 <h3>Score: {scores}</h3>
             </div>
         </div> 
     )

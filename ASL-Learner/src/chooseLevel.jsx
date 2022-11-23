@@ -110,7 +110,7 @@ function ChooseLevel(){
                 </div>
             </div>
 
-            {/* {level.map( (val,i) =>{
+            {/* { level.map( (val,i) =>{
                 return(
                     <div> 
                         <span>val</span>
@@ -124,7 +124,7 @@ function ChooseLevel(){
                         </div>
 
                     </div>)
-            })} */}
+            })}  */}
         </div>
     )
 }

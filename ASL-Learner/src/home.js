@@ -18,9 +18,7 @@ function Home(){
             <div className='image'>
                 
             </div>
-            <div className="bottomSpace">
-                <h1 className='descTitle1'>L E A R N E R</h1>
-            </div>
+
             <div className='bottomSpace'>
                 <button onClick={navigateChoosehand} class="button-9" role="button">Let's Start</button>
             </div>
@@ -31,7 +29,13 @@ function Home(){
                     In this project, we are using the machine learning to guide our users to learn ASL by using hand gestures. 
                     The user will use the webcam to perform a hand gesture based on the designated ASL sign showed on the display. 
                     They will learn how each English letter is transferred into a ASL sign. 
-                    They can also use it as a translator where they perform ASL sign that is converted into letter which is converted into sentence
+                    They can also use it as a translator where they perform ASL sign that is converted into letter which is converted into sentence. This webapp is build to guide poeple
+                    learn ASL / fingerspelling quickly. This app also assists people who wants to learn how to communicate with hearing disability people.
+                    This app will help people to learn about fingerspelling which can provide them with more career options. They can use the knowledge from here to build their career.
+                    This webapp will create employment for people who are interested at working with deaf or hearing disabled people. This webapp has potential to care take of our hearing
+                    disabled people. We have build this app with our love to help the people who are in need of assistance. Our hope is that people can contribute to society by using
+                    our webapp. So, best wishes from us.
+
                      </p>
                 </div>
                 <img className='img1' src={img1}></img>
@@ -48,7 +52,7 @@ function Home(){
                     ASL is most closely related to French Sign Language (LSF). 
                     It has been proposed that ASL is a creole language of LSF, although ASL shows features atypical of creole languages, such as agglutinative morphology.
                     ASL is mostly used for North American people who are deaf and hard of hearing. Many other countries have their sign languages. 
-                    Even though most of the sign languages are similar, they have some differences</p>
+                    Even though most of the sign languages are similar, they have some differences.</p>
                     </div>
                 
             </div>

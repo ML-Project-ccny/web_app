@@ -105,3 +105,11 @@
   .slider.round:before {
     border-radius: 50%;
   }
+
+
+  .point{
+    margin-left: 80px;
+    margin-top: 25px;
+    height: fit-content;
+    position: absolute;
+  }

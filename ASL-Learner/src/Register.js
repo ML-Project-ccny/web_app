@@ -18,7 +18,7 @@ const Register = () => {
     const [validName, setValidName] = useState(false);
     const [userFocus, setUserFocus] = useState(false);
 
-    const [pwd, setPwd] = useState('');
+    const [password, setPwd] = useState('');
     const [validPwd, setValidPwd] = useState(false);
     const [pwdFocus, setPwdFocus] = useState(false);
 
@@ -30,24 +30,33 @@ const Register = () => {
     const [success, setSuccess] = useState(false);
 
 
-    async function register (email, passWord){
-            await axios({
-                method: 'POST',
-                url: 'http://localhost:5000/user',
-                data: {email, passWord},
-                headers: {
-                    'Content-Type': 'text/plain;charset=utf-8',
-                },
-            }).then((res) => {
-                if (res.data['email'] === "email already in use"){
-                    setErrMsg('Registration Failed')
-                    
-                }
-                else{
-                    setSuccess(true);
-                }
+
+    
+    async function register(){
+        console.log(email, password)
+
+        const body = {
+            email,
+            password
+        }
+
+        console.log(body)
+        const res = await axios({
+            method: 'POST',
+            url: 'http://localhost:5000/user',
+            data: body,
+            headers: {
+                'Content-Type': 'text/plain;charset=utf-8',
+            },
+        })
+        if (res.data['email'] === email){
+            setErrMsg('Registration Failed')
                 
-            })
+        }
+        else{
+            setSuccess(true)
+        }
+    
     }
 
 
@@ -60,54 +69,25 @@ const Register = () => {
     }, [email])
 
     useEffect(() => {
-        setValidPwd(PWD_REGEX.test(pwd));
-        setValidMatch(pwd === matchPwd);
-    }, [pwd, matchPwd])
+        setValidPwd(PWD_REGEX.test(password));
+        setValidMatch(password === matchPwd);
+    }, [password, matchPwd])
 
     useEffect(() => {
         setErrMsg('');
-    }, [email, pwd, matchPwd])
+    }, [email, password, matchPwd])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         // to avoid hacking
         const v1 = USER_REGEX.test(email);
-        const v2 = PWD_REGEX.test(pwd);
+        const v2 = PWD_REGEX.test(password);
         if (!v1 || !v2) {
             setErrMsg("Invalid Entry");
             return;
         }
-        /*try {
-            const response = await axios.post(REGISTER_URL,
-                JSON.stringify({ email, pwd }),
-                {
-                    headers: {
-                        'Content-Type': 'text/plain;charset=utf-8',
-                    },
-                    withCredentials: true
-                }
-            );
-            //console.log(response?.data);
-            //console.log(response?.accessToken);
-            //console.log(JSON.stringify(response))
-            setSuccess(true);
-            //clear state and controlled inputs
-            //need value attrib on inputs for this
-            setUser('');
-            setPwd('');
-            setMatchPwd('');
-        } catch (err) {
-            if (!err?.response) {
-                setErrMsg('No Server Response');
-            } else if (err.response?.status === "email already in use") {
-                setErrMsg('Username Taken');
-            } else {
-                setErrMsg('something went wrong')
-            }
-            errRef.current.focus();
-        }*/
-        console.log(email, pwd);
-        setSuccess(true);
+        console.log(email, password);
+        
     }
 
     return (
@@ -153,13 +133,13 @@ const Register = () => {
                         <label htmlFor="password">
                             Password:
                             <FontAwesomeIcon icon={faCheck} className={validPwd ? "valid" : "hide"} />
-                            <FontAwesomeIcon icon={faTimes} className={validPwd || !pwd ? "hide" : "invalid"} />
+                            <FontAwesomeIcon icon={faTimes} className={validPwd || !password ? "hide" : "invalid"} />
                         </label>
                         <input
                             type="password"
                             id="password"
                             onChange={(e) => setPwd(e.target.value)}
-                            value={pwd}
+                            value={password}
                             required
                             aria-invalid={validPwd ? "false" : "true"}
                             aria-describedby="pwdnote"
