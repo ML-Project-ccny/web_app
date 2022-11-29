@@ -1,56 +1,84 @@
 import React, { useEffect,useState } from "react";
-import Webcam from 'webcam-easy';
 import './chooseLevel.css'
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import {useNavigate} from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
+import {useNavigate,useLocation} from 'react-router-dom';
 import axios from 'axios';
 
 function ChooseLevel(){
 
-    const [level,setLevel] = useState(['Level 1','Level 2','Level 3','Level 4'])
-    // const [count,setCount] = useState([8,6,7,6])
-    const [words,setWords] = useState()
-    const [score,setScore] = useState([
-        [],
-        [],
-        [],
-        []
-    ])
+    const {state} = useLocation();
+    const {username,password} = state
+    const [words,setWords] = useState([])
+    const [hand,setHand] = useState('right')
+    const [complete,setComplete] = useState([])
+
     const navigate = useNavigate();
     
-    useEffect( async () => {
-        const res = await axios({
-            method: 'get',
-            url: 'http://localhost:5000/allWords',
-            headers: {
-                'Content-Type': 'text/plain;charset=utf-8',
-            },
-        })
-        // if user is signed in 
-        //pass
-
-        //else
-        console.log(res.data)
-        let arrWords = []
-        Object.keys(res.data).forEach( (num) =>{
-            console.log(res.data[num])
-            arrWords.push(res.data[num])
-        } )
-        // setWords(arrWords)
-        // res.data.forEach((i,arr) => {
-        //     console.log(res.data[i])
-        // })
+    useEffect( () => {
+        getWords()
+        if(username){
+            document.getElementById('acc').innerHTML = 'Sign out'
+        }
     },[])
 
+    async function getWords(){
+        // if user is signed in 
+        let arrWords = []
+        if (username !== null){
+            const body = {
+                email:username
+            }
+            await axios({
+                method: 'get',
+                url: 'http://localhost:5000/words',
+                data: body,
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8',
+                },
+            }).then((res)=>{
+                setWords(res.data)
+                getCompletenes(res.data)
+            })
+        }else{
+            fetch('http://localhost:5000/allWords')
+            .then((response) => response.json())
+            .then( (res) => {
+                console.log(res)
+                Object.keys(res).forEach( (num) =>{
+                    console.log(res[num])
+                    arrWords.push(res[num])
+                } )
+                setWords(arrWords)
+                getCompletenes(arrWords)
+            })
+        }
+
+    }
+
+    function getCompletenes(arrWords){
+        let com = []
+        console.log(arrWords)
+        arrWords.map( (arr) =>{
+            let cnt = 0 
+            arr.map( (w) => {
+                if(w[1] !== 0){
+                    cnt += 1
+                }
+            })
+            com.push([cnt,arr.length])
+        })
+        setComplete(com)
+    }
     function changeDisplay(i,j){
         const content = document.getElementById(i)
         const title = document.getElementById(j)
-        if (content.style.display === "block") {
+        if (content.style.display === "grid") {
             content.style.display = "none";
             title.style.backgroundColor = 'white'
           } else {
-            content.style.display = "block";
+            content.style.display = "grid";
             title.style.backgroundColor = '#d2dce7'
           }
     } 
@@ -58,73 +86,56 @@ function ChooseLevel(){
         const content = document.getElementById('dropdown-basic-button')
         if (x == 0){
             content.innerHTML = 'Right'
+            setHand('right')
         }else{
             content.innerHTML = 'Left'
+            setHand('left')
         }
 
     }
 
-    const navigateGame = () =>{
-        navigate('/game');
+    function navigateGame(word,level){
+        let up_word = word.toUpperCase()
+        const arr_word = up_word.split("")
+        navigate('/game',{state : {word:arr_word,level,username,password,hand}});
+
     }
-    // useEffect( () => {
-    //     const webcamElement = document.getElementById('webcam');
-    //     const canvasElement = document.getElementById('canvas');
-    //     const webcam = new Webcam()   
-    //     webcam.start()
-    // },[])
+
     return (
         <div>
+            
+            <Button id='acc' className='account'>Sign In</Button>
             <div className='hand'>
-                <h4 className='question'>  Are you left or right handed? </h4>
-                <DropdownButton className='dropDown' id="dropdown-basic-button" title="Hand ">
-                    <Dropdown.Item onClick={() => changeHand(0)}>Right</Dropdown.Item>
-                    <Dropdown.Item onClick={() => changeHand(1)}  href="#/action-2">Left</Dropdown.Item>
-                </DropdownButton>
-                {/* <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button className="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Home</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button className="nav-link deactive" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Profile</button>
-                    </li>
-                </ul> */}
-            </div>
-            <div className='level'>
-                <div id='1title' onClick={() => changeDisplay(1,'1title')} className='title'>
-                    <h4>Level 1</h4>
-                    <div className="rightTitle">
-                        <p className='score'> (6 / 8)</p>
-                        <div className='grayBar'> 
-                            <div className='colorBar'></div>
+                    <h4 className='question'>  Are you left or right handed? </h4>
+                    <DropdownButton className='dropDown' id="dropdown-basic-button" title="Hand ">
+                        <Dropdown.Item onClick={() => changeHand(0)}>Right</Dropdown.Item>
+                        <Dropdown.Item onClick={() => changeHand(1)} >Left</Dropdown.Item>
+                    </DropdownButton>
+
+                </div>
+
+            {words.map( (arr,i) => {
+                return(
+                    <div className='level'>
+                        <div id={`${i}title`} onClick={() => changeDisplay(i,`${i}title`)} className='title'>
+                            <h4>Level {i+1}</h4>
+                            <div className="rightTitle">
+                                <p className='score'> ({complete[i][0]} / {complete[i][1]})</p>
+                                <div className='grayBar'> 
+                                    <div className='colorBar' style={{"width":`${complete[i][0] / complete[i][1]}%` }}></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id ={i} class="grid-container">
+                        {arr.map( (word) => {
+                                return <h4 onClick={() => navigateGame(word[0],i+1)} className={ `word ${ word[1]===0 ? 'wordColor' :'wordColorCompleted'}` }>
+                                        <span>{word[0]}</span>
+                                    </h4>
+                            })}
                         </div>
                     </div>
-
-                </div>
-                
-                <div id ='1' className='words'>
-                    <h4 onClick={navigateGame} className='word'><span>word 1</span></h4>
-                    <h4 className='word'><span>word 1</span></h4>
-                    <h4 className='word'><span>word 1</span></h4>
-                    <h4 className='word'><span>word 1</span></h4>
-                </div>
-            </div>
-
-            {/* {level.map( (val,i) =>{
-                return(
-                    <div> 
-                        <span>val</span>
-                        <span>score</span>
-                        <div>
-                        {score[i].map( (val,i) => {
-                            return(
-                                <div>val</div>
-                            )
-                        })}
-                        </div>
-
-                    </div>)
-            })} */}
+                )
+            })}
         </div>
     )
 }

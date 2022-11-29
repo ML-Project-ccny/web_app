@@ -10,6 +10,7 @@
 .leftSideContent{
     width: fit-content;
     margin: auto auto;
+  
     /* border: 1px solid black; */
 }
 
@@ -104,4 +105,13 @@
   
   .slider.round:before {
     border-radius: 50%;
+  }
+
+
+  .percent{
+    font-size: 32px;
+    display: flex;
+    justify-content: center;
+    margin:auto 0;
+    vertical-align: middle;
   }

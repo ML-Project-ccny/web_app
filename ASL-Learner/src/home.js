@@ -1,6 +1,5 @@
 import React from "react";
 import './home.css';
-import { Container, Form, Button, ButtonGroup } from "react-bootstrap";
 import {useNavigate} from 'react-router-dom';
 import img1 from './images/Inked268148-P5GZPM-683.jpg';
 import img2 from './images/istockphoto-1364814067-612x612.jpg'
@@ -9,7 +8,7 @@ function Home(){
     const navigate = useNavigate();
 
     const navigateChoosehand = () =>{
-        navigate('/level');
+        navigate('/level',{state:{username:null,password:null}});
     }
 
     return (
