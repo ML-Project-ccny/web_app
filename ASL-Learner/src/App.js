@@ -11,6 +11,7 @@ import ChooseLevel from './chooseLevel'
 import Game from './game'
 import Login from './Login';
 import Register from './Register';
+import Info from './info';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path="/game" element={<Game />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/Register" element={<Register />} />
+        <Route path="/Info" element={<Info />} />
 
       </Routes>
     </div>

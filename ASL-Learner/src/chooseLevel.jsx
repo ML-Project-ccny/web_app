@@ -113,9 +113,14 @@ function ChooseLevel(){
         navigate('/Login');
     }
 
+    function navigateInfo(){
+        navigate('/Info')
+    }
+
     return (
         <div className='cont'>
             <Button id='acc' className='account' onClick={navigateSignIn}>Sign In</Button>
+            <Button id='acc' className='account' onClick={navigateInfo}>User Info</Button>
             <div className='hand'>
                     <h4 className='question'>  Are you left or right handed? </h4>
                     <DropdownButton className='dropDown' id="dropdown-basic-button" title="Right ">
