@@ -1,7 +1,10 @@
 body{
     background-color:#d2dce7;
 }
-
+.cont{
+    position:absolute;
+    top:10;
+}
 .header{
     display: flex;
 }
@@ -9,8 +12,8 @@ body{
     margin-left: 20px;
     margin-top: 10px;
 }
-.hand{
 
+.hand{
     margin:0 auto;
     width:70vw;
     background-color: #f8f8f8;
@@ -20,8 +23,8 @@ body{
     margin-top:5vh;
     display: flex;
     margin-bottom: 30px;
-
 }
+
 .question{
     margin:auto 0;
 

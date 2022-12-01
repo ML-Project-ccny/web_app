@@ -26,20 +26,26 @@ function ChooseLevel(){
     async function getWords(){
         // if user is signed in 
         let arrWords = []
+        console.log(username,password)
         if (username !== null){
             const body = {
                 email:username
             }
             await axios({
-                method: 'get',
+                method: 'post',
                 url: 'http://localhost:5000/words',
                 data: body,
                 headers: {
                     'Content-Type': 'text/plain;charset=utf-8',
                 },
             }).then((res)=>{
-                setWords(res.data)
-                getCompletenes(res.data)
+                console.log(res.data)
+                Object.keys(res.data).forEach( (num) =>{
+                    console.log(res.data[num])
+                    arrWords.push(res.data[num])
+                } )
+                setWords(arrWords)
+                getCompletenes(arrWords)
             })
         }else{
             fetch('http://localhost:5000/allWords')
@@ -51,6 +57,7 @@ function ChooseLevel(){
                     arrWords.push(res[num])
                 } )
                 setWords(arrWords)
+                console.log(arrWords)
                 getCompletenes(arrWords)
             })
         }
@@ -71,6 +78,7 @@ function ChooseLevel(){
         })
         setComplete(com)
     }
+
     function changeDisplay(i,j){
         const content = document.getElementById(i)
         const title = document.getElementById(j)
@@ -101,13 +109,16 @@ function ChooseLevel(){
 
     }
 
+    function navigateSignIn(){
+        navigate('/Login');
+    }
+
     return (
-        <div>
-            
-            <Button id='acc' className='account'>Sign In</Button>
+        <div className='cont'>
+            <Button id='acc' className='account' onClick={navigateSignIn}>Sign In</Button>
             <div className='hand'>
                     <h4 className='question'>  Are you left or right handed? </h4>
-                    <DropdownButton className='dropDown' id="dropdown-basic-button" title="Hand ">
+                    <DropdownButton className='dropDown' id="dropdown-basic-button" title="Right ">
                         <Dropdown.Item onClick={() => changeHand(0)}>Right</Dropdown.Item>
                         <Dropdown.Item onClick={() => changeHand(1)} >Left</Dropdown.Item>
                     </DropdownButton>
