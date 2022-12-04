@@ -114,7 +114,7 @@ function ChooseLevel(){
     }
 
     function navigateInfo(){
-        navigate('/Info')
+        navigate('/Info', {state : {email: username}});
     }
 
     return (

@@ -1,11 +1,24 @@
-import React from "react";
+import React , {useEffect, useState}from "react";
 import './info.css';
-import {useNavigate} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import axios from 'axios';
+import Button from 'react-bootstrap/Button';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 function Info (){
 
+    const {state} = useLocation();
+    const {email} = state
+    const [wordarr,setWordarr] = useState([])
+    const [result,setResult] = useState()
+
+    useEffect( () => {
+        scores()
+    },[])
+
     const navigate = useNavigate();
+    
 
     const navigateChooselevel = () =>{
         navigate('/level');
@@ -19,66 +32,76 @@ function Info (){
         navigate('/Login');
     }
 
-    async function scores(score){
+    async function scores(){
+        let arrWords = []
         const body = {
-            score
+            email
         }
         const res = await axios ({
-            method: 'PATCH',
-            url: 'http://localhost:5000/word',
+            method: 'POST',
+            url: 'http://localhost:5000/words',
             data: body,
             headers: {
                 'Content-Type': 'text/plain;charset=utf-8',
             },
         })
-        results.push(res.data['score'])
+        console.log(res.data)
+        Object.keys(res.data).forEach( (arr) =>{
+            console.log(res.data[arr])
+            arrWords.push(res.data[arr])
+        } )
+        console.log(arrWords)
+        setWordarr(arrWords)
+
+        let result_= 0
+
+        arrWords.map((arr, i) => {
+            arr.map ((w) => {
+                result_ = result_ + w[1] 
+            })
+            setResult(result_)
+        })
+
     }
-
-    const users = [
-        {id: 1, email: 'asama@gmail.com', password: 'L1ven@me', score: 2},
-        //{id: 2, email: 'jacob122@gmail.com', password: 'P@ssw0rd', score: 2},
-        //{id: 3, email: 'jessica1334@gmail.com', password: 'N@mes123', score: 2},
-    ]
-
-    const results = []
-
-    users.forEach(user => {
-        results.push(
-            <div key={user.id}>
-                <table>
-                
-                    <tr>
-                        <td> <h4>Email: </h4></td>
-                        <td>{user.email}</td>
-                    </tr>
-                    <tr>
-                        <td> <h4>Password:</h4> </td>
-                        <td>{user.password}</td>
-                    </tr>
-                    <tr>
-                        <td> <h4>Score:</h4> </td>
-                        <td>{user.score}</td>
-                    </tr>
-                
-                </table>
-                
-            </div>
-        );
-    });
-
 
 
     return (
             <div className="info">
-                <h1 className="top"> User Info</h1>
+                <h1 className="top"> User Info </h1>
+                
                 <div className="contents">
-                        {results}
+                       
+                        {wordarr.map((arr, i) => {
+                            if (email){
+                                return(
+                                    <div>
+                                        <table>
+                                            <tr>
+                                                <td> <h4>Level:</h4> </td>
+                                                <td>{i+1}</td>
+                                            </tr>
+                                            <tr>
+                                                <td> <h4>Score:</h4> </td>
+                                                {/* <td>{result}</td> */}
+                                                <td>{arr.map((w) => {
+                                                    return (
+                                                        <div>{w[0]} : {w[1]}</div>
+                                                    )
+                                                })}</td>
+                                            </tr> 
+                                        </table>
+                                    </div>
+                                )
+                            }
+                        })}
 
+                        <button class="button-90" >Username: {email}</button>
                         <button onClick={navigateChooselevel} class="button-90" role="button">Level Page</button>
                        
                         <button onClick={navigateGame} class="button-90" role="button">Game Page</button>
+
                         
-                        <button onClick={navigateLogin} class="button-90" role="button">Login Page</button>
+                        
                     
                 </div>
             </div>
