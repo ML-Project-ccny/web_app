@@ -2,14 +2,11 @@ import React , {useEffect, useState}from "react";
 import './info.css';
 import {useLocation, useNavigate} from 'react-router-dom';
 import axios from 'axios';
-import Button from 'react-bootstrap/Button';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import Dropdown from 'react-bootstrap/Dropdown';
 
 function Info (){
 
     const {state} = useLocation();
-    const {email} = state
+    const {email, password, word, level, hand} = state
     const [wordarr,setWordarr] = useState([])
     const [result,setResult] = useState()
 
@@ -21,11 +18,7 @@ function Info (){
     
 
     const navigateChooselevel = () =>{
-        navigate('/level');
-    }
-
-    const navigateGame= () =>{
-        navigate('/game');
+        navigate('/level',{state:{username:email, password}});
     }
 
     const navigateLogin= () =>{
@@ -98,7 +91,7 @@ function Info (){
                         <button class="button-90" >Username: {email}</button>
                         <button onClick={navigateChooselevel} class="button-90" role="button">Level Page</button>
                        
-                        <button onClick={navigateGame} class="button-90" role="button">Game Page</button>
+                        <button onClick={navigateLogin} class="button-90" role="button">Log Out</button>
 
                         
                         
